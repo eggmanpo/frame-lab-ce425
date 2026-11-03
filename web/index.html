@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="CE425 interactive 2D frame analysis">
+<title>FrameLab | CE425</title><link rel="stylesheet" href="./styles.css"></head>
+<body><header><div class="brand"><span class="mark">FL</span><div><strong>FrameLab</strong><small>CE425 · 2D FRAME ANALYSIS</small></div></div><span class="status">● Browser solver · No MATLAB required</span></header>
+<main><section class="intro"><div><h1>Analyze the ABC frame.</h1><p>Visualize frame stiffness, joint displacements, element forces and support reactions. Compare the unbraced and BD-truss configurations.</p></div><span class="tag">Linear elastic FEM</span></section>
+<div class="layout"><aside class="panel"><h2>Structural inputs</h2><p class="note">Units: m, kN, rad. EA in kN and EI in kN·m².</p>
+<form id="params"><h3>Geometry</h3><div class="fields">
+<label>Vertical rise h (m)<input name="h" type="number" min="0.01" step="any" required></label>
+<label>Span AB (m)<input name="L_AB" type="number" min="0.01" step="any" required></label>
+<label>Member BC length (m)<input name="L_BC" type="number" min="0.01" step="any" required></label>
+</div><h3>Member rigidities</h3><div class="fields">
+<label>EA — AB (kN)<input name="EA_AB" type="number" step="any" required></label>
+<label>EI — AB (kN·m²)<input name="EI_AB" type="number" step="any" required></label>
+<label>EA — BC (kN)<input name="EA_BC" type="number" step="any" required></label>
+<label>EI — BC (kN·m²)<input name="EI_BC" type="number" step="any" required></label>
+<label>EA — BD truss (kN)<input name="EA_truss" type="number" step="any" required></label>
+</div><h3>Loads</h3><div class="fields">
+<label>w downward (kN/m)<input name="w" type="number" min="0" step="any" required></label>
+<label>P leftward (kN)<input name="P" type="number" min="0" step="any" required></label>
+</div><button class="primary" type="submit">Run both cases ↗</button><button class="secondary" id="reset" type="button">Restore example inputs</button></form>
+<div class="notice">⚠ Values are illustrative. Replace them with Table 1a before reporting results.</div>
+</aside>
+<section class="results"><div class="panel"><div class="toolbar"><div><h2>Frame visualization</h2><p class="note">A and C fixed; D pinned; BD axial only. B is a rigid frame joint.</p></div><select id="case"><option value="0">Part 1a · Unbraced</option><option value="1">Part 1b · Braced</option></select></div>
+<div id="figure" class="figure"></div><div class="controls"><label><input id="deformation" type="checkbox" checked> Show magnified deformation</label><label>Magnification <input id="scale" type="range" min="1" max="20" value="6"></label></div></div>
+<div class="metrics" id="metrics"></div>
+<div class="panel"><div class="toolbar"><h2>Numerical results</h2><div class="buttons"><button id="json" type="button">Export JSON</button><button id="csv" type="button">Export CSV</button></div></div>
+<nav class="tabs" id="tabs"><button data-tab="arrays" class="active">ID / IEN / LM</button><button data-tab="stiffness">Stiffness matrices</button><button data-tab="displacements">Displacements</button><button data-tab="forces">Forces & reactions</button><button data-tab="checks">Equilibrium</button></nav><div id="tables"></div></div>
+<div class="panel"><h2>Support moment comparison</h2><div id="comparison"></div></div></section></div>
+<footer>CE425 · Educational prototype — verify against analytical solutions and Table 1a before engineering use.</footer></main>
+<script type="module" src="./app.js"></script></body></html>

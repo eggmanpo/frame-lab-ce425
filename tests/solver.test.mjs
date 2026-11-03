@@ -1,0 +1,10 @@
+import test from "node:test";import assert from "node:assert/strict";
+import {analyzeFrame,assembleID,assembleLM,EXAMPLE} from "../web/solver.js";
+test("Course ID and LM",()=>{const id=assembleID([[1,1,1],[0,0,0],[1,1,1]]);
+assert.deepEqual(id,[[-1,-2,-3],[1,2,3],[-4,-5,-6]]);
+assert.deepEqual(assembleLM(id,[[1,2],[2,3]]),[[-1,-2,-3,1,2,3],[1,2,3,-4,-5,-6]])});
+test("Both structures obey equilibrium",()=>{for(const b of [false,true]){const r=analyzeFrame(EXAMPLE,b);assert.equal(r.neq,3);assert.ok(Math.abs(r.equilibrium.Fx)<1e-7);assert.ok(Math.abs(r.equilibrium.Fy)<1e-7);assert.ok(Math.abs(r.equilibrium.M)<1e-7);assert.ok(r.residual<1e-7)}});
+test("Axial truss has zero rotational stiffness and moment",()=>{const r=analyzeFrame(EXAMPLE,true),t=r.elements[2];assert.equal(t.type,"Truss");for(const i of [2,5]){assert.ok(t.kl[i].every(x=>x===0));assert.equal(t.localEndForces[i],0)}assert.equal(r.reactions[3][2],0)});
+test("Bracing reduces B translation magnitude in example",()=>{const a=analyzeFrame(EXAMPLE,false),b=analyzeFrame(EXAMPLE,true);const norm=r=>Math.hypot(...r.nodeDisplacements[1].slice(0,2));assert.ok(norm(b)<norm(a))});
+test("Zero loading",()=>{for(const b of [false,true]){const r=analyzeFrame({...EXAMPLE,w:0,P:0},b);assert.ok(r.DG.every(x=>x===0));assert.ok(r.reactions.flat().every(x=>x===0))}});
+test("Invalid geometry is rejected",()=>{assert.throws(()=>analyzeFrame({...EXAMPLE,L_BC:3},true))});
